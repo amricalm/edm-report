@@ -1,6 +1,7 @@
 @extends('templates.index')
 @include('templates.komponen.sweetalert')
 @include('templates.komponen.multiselect-checklist')
+
 @section('body')
 <!-- Page -->
 <div class="page">
@@ -16,11 +17,11 @@
                         <h4 class="page-title mb-0 text-primary">{{ $judul }}</h4>
                     </div>
                     <div class="page-rightheader">
-                        <div class="btn-list">
+                        {{-- <div class="btn-list">
                             <a href="#" id="xlsExport" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-spreadsheet" viewBox="0 0 16 16">
                                 <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V9H3V2a1 1 0 0 1 1-1h5.5v2zM3 12v-2h2v2H3zm0 1h2v2H4a1 1 0 0 1-1-1v-1zm3 2v-2h3v2H6zm4 0v-2h3v1a1 1 0 0 1-1 1h-2zm3-3h-3v-2h3v2zm-7 0v-2h3v2H6z"/>
                                 </svg> XLS</a>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <!--End Page header-->
@@ -30,58 +31,13 @@
                         <div class="card mb-4">
                             <div class="card-body py-4">
                                 <div class="form-group row row-sm mb-0 align-items-center">
-                                    <label class="col-auto text-right fs-11">Pembayaran</label>
-                                    <div class="col-md-3">
-                                        <select name="kas" id="kas" class="form-select form-control  form-control-sm  mb-2 huruf-kecil" tabindex="1">
-                                            @foreach($kas as $item){
-                                                <option value="{{$item->kd_kas}}">{{$item->nm_kas}}</option>
-                                            }
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <label class="col-auto text-right fs-11">Periode</label>
+                                    <label class="col-md-1 fs-11">Periode</label>
                                     <div class="col-md-2">
                                         <input type="text" id="tx-tgl-dr" placeholder="yyyy-mm-dd" autocomplete="off" name="" class="form-control  form-control-sm  mb-2  huruf-kecil" tabindex="2">
                                     </div>
                                     <label class="col-auto text-right fs-11">s/d</label>
                                     <div class="col-md-2">
                                         <input type="text" id="tx-tgl-sd"  placeholder="yyyy-mm-dd" autocomplete="off" name="" class="form-control  form-control-sm  mb-2  huruf-kecil" tabindex="3">
-                                    </div>
-                                    <label class="col-auto text-right fs-11">Jaringan</label>
-                                    <div class="col-md-2">
-                                        <select name="jaringan" id="jaringan" class="form-select form-control  form-control-sm  mb-2 huruf-kecil" tabindex="4">
-                                            @foreach($jaringan as $item){
-                                                <option value="{{$item->kd_agen}}">{{$item->nm_agen}}</option>
-                                            }
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row row-sm mb-0 align-items-center">
-                                    <label class="col-auto text-right fs-11">Kantor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                    <div class="col-md-3">
-                                        <select name="cabang" id="cabang" class="form-select form-control  form-control-sm  mb-2 huruf-kecil" tabindex="5">
-                                            @foreach($cabang as $item){
-                                                <option value="{{$item->kd_cabang}}">{{$item->nm_cabang}}</option>
-                                            }
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <label class="col-auto text-right fs-11">Jenis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                    <div class="col-md-2">
-                                        <select name="jenis-periode" id="jenis-periode" class="form-select form-control  form-control-sm  mb-2 huruf-kecil" tabindex="8">
-                                            <option value="PeriodeSetor">Periode Setor</option>
-                                            <option value="PeriodeTransaksi">Periode Transaksi</option>
-                                        </select>
-                                    </div>
-                                    <label class="col-auto text-right fs-11">Program</label>
-                                    <div class="col-sm-3">
-                                        <select class="multiple-select" id="program" multiple="multiple" name="program" data-width="50">
-                                            @foreach($program as $item)
-                                                <option value="{{$item->kd_program}}">{{$item->nm_program}}</option>
-                                            @endforeach
-                                        </select>
                                     </div>
                                     <div class="col-md-1">
                                         <button type="button" id="tampil" class="btn btn-sm btn-primary" tabindex="9"><i class="fe fe-search"></i>Tampil</button>
@@ -134,28 +90,15 @@ $(function() {
 
     loadData(1,$('#tx-tgl-dr').val(),$('#tx-tgl-sd').val());
 
-
-    $(document).on('click','.sort', function(){
-        var tglDr = $('#tx-tgl-dr').val();
-        var tglSd = $('#tx-tgl-sd').val();
-        var sort = $(this).data('sort');
-        sort = (sort==='asc')?'desc':'asc';
-        var sortField = $(this).data('sort-field');
-        loadData(1,tglDr,tglSd,sort,sortField);
-     });
-
     $(document).on('click', '.halaman', function(){
         var page = $(this).attr("id");
         var tglDr = $('#tx-tgl-dr').val();
         var tglSd = $('#tx-tgl-sd').val();
         var cabang = $('#cabang').val();
         var program = $('#program').val();
-        var jaringan = $('#jaringan').val();
-        var kas = $('#kas').val();
         var jenisPeriode = $('#jenis-periode').val();
-        var sort = $('#sortAktif').data('sort');
-        var sortField = $('#sortAktif').data('sort-field');
-        loadData(page,tglDr,tglSd,cabang,program,jaringan,kas,jenisPeriode,sort,sortField);
+        var sales = $('#sales').val();
+        loadData(page,tglDr,tglSd,cabang,program,jenisPeriode,sales);
     });
 
     $('#tampil').click(function () {
@@ -163,31 +106,26 @@ $(function() {
         var tglSd = $('#tx-tgl-sd').val();
         var cabang = $('#cabang').val();
         var program = $('#program').val();
-        var jaringan = $('#jaringan').val();
-        var kas = $('#kas').val();
         var jenisPeriode = $('#jenis-periode').val();
-        var sort = $('#sortAktif').data('sort');
-        var sortField = $('#sortAktif').data('sort-field');
-        loadData(1,tglDr,tglSd,cabang,program,jaringan,kas,jenisPeriode,sort,sortField);
+        var sales = $('#sales').val();
+        loadData(1,tglDr,tglSd,cabang,program,jenisPeriode,sales);
     });
 
     $(document).on("click", "#xlsExport", function()
     {
         let query = buildQuery({
-        action: "{{route('lap.donasi.xls')}}",
+        action: "{{route('export.matrik.xls')}}",
         url: {
                 tglDr: $('#tx-tgl-dr').val(),
                 tglSd: $('#tx-tgl-sd').val(),
                 kdCabang: $('#cabang').val(),
                 kdProgram:  $('#program').val(),
-                kdJaringan: $('#jaringan').val(),
-                kdKas: $('#kas').val(),
-                jenisPeriode: $('#jenis-periode').val()
+                jenisPeriode: $('#jenis-periode').val(),
+                sales: $('#sales').val()
             }
         });
         location.replace(query);
     });
-
     $('.multiple-select').multipleSelect()
 });
 
@@ -195,13 +133,12 @@ buildQuery = ({action, url}) => `${action}?${Object.entries(url)
   .map(pair => pair.map(encodeURIComponent).join('='))
   .join('&')}`;
 
-function loadData(page,tglDr,tglSd,cabang,program,jaringan,kas,jenisPeriode,sort,sortField){
+function loadData(page,tglDr,tglSd,cabang,program,jenisPeriode,sales){
     $.ajax({
-        url:"{{ route('lap.getDonasi.tbl') }}",
+        url:"{{ route('get.matrik.tbl') }}",
         method:"POST",
         data:{page:page,tglDr:tglDr,tglSd:tglSd,kdCabang:cabang,
-            kdProgram:program,kdJaringan:jaringan,kdKas:kas,
-            jenisPeriode:jenisPeriode,sort:sort,sortField:sortField},
+            kdProgram:program,jenisPeriode:jenisPeriode,sales:sales},
         success:function(data){
                 $('#tbl').html(data);
                 $("#ajax-loading").hide();

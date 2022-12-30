@@ -123,6 +123,28 @@ class MGM{
         return $res;
     }
 
+    public static function getRfProgram($aktif=true, $tambahSemua=false,$orderBy='nm_program'){
+        $tbl = "rf_kategori_program";
+
+        $res =  DB::table($tbl)->selectRaw('rtrim(kd_kategori) as kd_kategori,nm_kategori');
+        if($aktif==true) {
+            $res = $res->where('aktif',$aktif);
+        }
+        $res = $res->orderBy('nm_kategori')->get();
+
+        if($tambahSemua)
+        {
+            if (count($res)>1)
+            {
+                $obj = new \stdClass;
+                $obj->kd_kategori = '999';
+                $obj->nm_kategori ='--- SEMUA ---';
+                $res->prepend($obj,0);
+            }
+        }
+        return $res;
+    }
+
     public static function isProgramWAP($kdProgram)
     {
         $res=false;
@@ -160,7 +182,7 @@ class MGM{
              ->selectRaw('kd_project, nm_project,kd_program')
              ->orderBy('nm_project')
              ->where('aktif', 1);
-        
+
         if(trim($kdProgram)!='')
         {
             $q = $q->where('kd_program',$kdProgram);
@@ -169,7 +191,7 @@ class MGM{
         $q = $q->get()->toArray();
         return $q;
         // $str='';
-        // foreach ($q as $val) 
+        // foreach ($q as $val)
         // {
         //     if($str!='') $str=$str.'#';
         //     $str = $str . trim($val->kd_project) . "   [" . trim($val->nm_project) . ']';
